@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "crud-contacts-c985e"
+  },
+  "targets": {
+    "crud-contacts-c985e": {
+      "hosting": {
+        "angular-17-firebase-crud": [
+          "crud-contacts-c985e"
+        ]
+      }
+    }
+  }
+}
