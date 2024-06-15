@@ -11,6 +11,8 @@ import { IconRocket } from '../../../shared/ui/icons/rocket';
 import { IconBack } from '../../../shared/ui/icons/back';
 import { ContactsService } from '../../data-access/contacts.service';
 import { ContactForm } from '../../shared/interfaces/contacts.interface';
+import { MatInput } from '@angular/material/input';
+import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 
 export interface CreateForm {
   fullName: FormControl<string>;
@@ -29,24 +31,30 @@ export interface CreateForm {
             >Nombre:</label
           >
           <input
-            type="text"
+            matInput type="text"
             id="first_name"
             class="w-full p-3 rounded-md text-sm bg-transparent border-gray-500 border"
-            placeholder="Nombre Apellido"
             formControlName="fullName"
           />
+          @if(firtsField.hasError('required')){
+					<mat-error> Ingrese el nombre </mat-error>
+					}
         </div>
         <div class="mb-8">
           <label for="email" class="block mb-2 text-sm font-medium"
             >Email:</label
           >
           <input
-            type="text"
+             matInput type="text"
             id="email"
             class="w-full p-3 rounded-md text-sm bg-transparent border-gray-500 border"
-            placeholder="ejemplo@mail.com"
             formControlName="email"
           />
+          @if(emailField.hasError('required')){
+					<mat-error>Ingrese el e-mail </mat-error>
+					} @if(emailField.hasError('email')){
+					<mat-error> Ingrese un e-mail valido (ejemplo&#64;mail.com)</mat-error>
+					}
         </div>
         <div class="mb-8">
           <label for="phoneNumber" class="block mb-2 text-sm font-medium"
@@ -56,9 +64,13 @@ export interface CreateForm {
             type="text"
             id="phoneNumber"
             class="w-full p-3 rounded-md text-sm bg-transparent border-gray-500 border"
-            placeholder="+52 0123456789"
             formControlName="phoneNumber"
           />
+          @if(phoneNumber.hasError('required')){
+					<mat-error>Ingrese el número telefónico </mat-error>
+					} @if(phoneNumber.hasError('pattern')){
+					<mat-error> Ingrese solo números </mat-error>
+					}
         </div>
         <div class="mb-8">
           <label for="description" class="block mb-2 text-sm font-medium"
@@ -95,7 +107,7 @@ export interface CreateForm {
     </div>
   `,
   standalone: true,
-  imports: [ReactiveFormsModule, IconRocket, IconBack, RouterLink],
+  imports: [ReactiveFormsModule, IconRocket, IconBack, RouterLink, MatInput, MatError],
 })
 export default class ContactCreateComponent {
   private _formBuilder = inject(FormBuilder).nonNullable;
@@ -121,7 +133,7 @@ export default class ContactCreateComponent {
       Validators.required,
       Validators.email,
     ]),
-    phoneNumber: this._formBuilder.control('', Validators.required),
+    phoneNumber: this._formBuilder.control('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
     description: this._formBuilder.control(''),
   });
 
@@ -151,4 +163,15 @@ export default class ContactCreateComponent {
       });
     } catch (error) {}
   }
+
+  get firtsField(): FormControl<string> {
+		return this.form.controls.fullName;
+	}
+  get emailField(): FormControl<string> {
+		return this.form.controls.email;
+	}
+
+  get phoneNumber(): FormControl<string> {
+		return this.form.controls.phoneNumber;
+	}
 }

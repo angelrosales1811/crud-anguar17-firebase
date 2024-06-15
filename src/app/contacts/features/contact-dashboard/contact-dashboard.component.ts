@@ -13,7 +13,8 @@ import { of } from 'rxjs';
   template: `
     <div class="px-4 xl:px-0 w-full max-w-[1200px] m-auto">
       <app-search-bar (changeQuery)="changeQuery($event)" />
-      <section class="grid grid-cols-3 gap-8 mt-8">
+      <section class="grid sm:grid-flow-col grid-flow-row gap-8 mt-8">
+      <!-- <section class="grid grid-flow-col md:grid-flow-row gap-8 mt-8"> -->
         @for (contact of contacts$ | async; track contact.id) {
           <app-card-contact
             [contact]="contact"
